@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+    Ignite configuration with all defaults and enabled p2p deployment and enabled events.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <bean id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
+        <!-- Set to true to enable distributed class loading for examples, default is false. -->
+        <property name="peerClassLoadingEnabled" value="true"/>
+        
+        <property name="cacheConfiguration">
+            <list>
+                <!-- Sensors cache -->
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="SensorCache"/>
+                    <property name="backups" value="1"/>
+                    <property name="atomicityMode" value="TRANSACTIONAL"/>
+
+                    <property name="queryEntities">
+                        <list>
+                            <bean class="org.apache.ignite.cache.QueryEntity">
+                                <!-- Key Type -->
+                                <property name="keyType" value="java.lang.Integer"/>
+                                <!-- Value Type -->
+                                <property name="valueType" value="org.apache.ignite.iot.model.Sensor"/>
+
+                                <!-- Fields to be used from SQL -->
+                                <property name="fields">
+                                    <map>
+                                        <entry key="id" value="java.lang.Integer"/>
+                                        <entry key="name" value="java.lang.String"/>
+                                        <entry key="latitude" value="java.lang.Double"/>
+                                        <entry key="longitude" value="java.lang.Double"/>
+                                    </map>
+                                </property>
+
+                                <!-- Assign an unique name for the key to access it from SQL easily. -->
+                                <property name="keyFieldName" value="id"/>
+
+                                <!-- Defining indexed fields.-->
+                                <property name="indexes">
+                                    <list>
+                                        <!-- Single field (aka. column) index -->
+                                        <bean class="org.apache.ignite.cache.QueryIndex">
+                                            <constructor-arg value="id"/>
+                                        </bean>
+
+                                        <!-- Single field (aka. column) index -->
+                                        <bean class="org.apache.ignite.cache.QueryIndex">
+                                            <constructor-arg value="latitude"/>
+                                        </bean>
+
+                                        <!-- Single field (aka. column) index -->
+                                        <bean class="org.apache.ignite.cache.QueryIndex">
+                                            <constructor-arg value="longitude"/>
+                                        </bean>
+                                    </list>
+                                </property>
+                            </bean>
+                        </list>
+                    </property>
+                </bean>
+
+                <!-- Temperature measurements cache. -->
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="TemperatureCache"/>
+                    <property name="backups" value="1"/>
+
+                    <!-- Setting expiration policy -->
+                    <property name="expiryPolicyFactory">
+                        <bean class="javax.cache.configuration.FactoryBuilder" factory-method="factoryOf">
+                            <constructor-arg>
+                                <bean class="javax.cache.expiry.CreatedExpiryPolicy">
+                                    <constructor-arg>
+                                        <bean class="javax.cache.expiry.Duration">
+                                            <constructor-arg index="0" value="SECONDS"/>
+                                            <constructor-arg index="1" value="20"/>
+                                        </bean>
+                                    </constructor-arg>
+                                </bean>
+                            </constructor-arg>
+                        </bean>
+                    </property>
+
+                    <property name="eagerTtl" value="true"/>
+
+                    <property name="queryEntities">
+                        <list>
+                            <bean class="org.apache.ignite.cache.QueryEntity">
+                                <!-- Key Type -->
+                                <property name="keyType" value="org.apache.ignite.iot.model.TempKey"/>
+                                <!-- Value Type -->
+                                <property name="valueType" value="java.lang.Float"/>
+
+                                <!-- Fields to be used from SQL -->
+                                <property name="fields">
+                                    <map>
+                                        <entry key="sensorId" value="java.lang.Integer"/>
+                                        <entry key="ts" value="java.util.Date"/>
+                                        <entry key="temp" value="java.lang.Float"/>
+                                    </map>
+                                </property>
+
+                                <!-- Assign an unique name for the value to access it from SQL easily. -->
+                                <property name="valueFieldName" value="temp"/>
+
+                                <!-- Defining indexed fields.-->
+                                <property name="indexes">
+                                    <list>
+                                        <!-- Single field (aka. column) index -->
+                                        <bean class="org.apache.ignite.cache.QueryIndex">
+                                            <constructor-arg value="temp"/>
+                                        </bean>
+
+                                        <!-- Single field (aka. column) index -->
+                                        <bean class="org.apache.ignite.cache.QueryIndex">
+                                            <constructor-arg value="sensorId"/>
+                                        </bean>
+
+                                        <!-- Single field (aka. column) index -->
+                                        <bean class="org.apache.ignite.cache.QueryIndex">
+                                            <constructor-arg value="ts"/>
+                                        </bean>
+
+                                        <!-- Group index. -->
+                                        <bean class="org.apache.ignite.cache.QueryIndex">
+                                            <constructor-arg>
+                                                <list>
+                                                    <value>sensorId</value>
+                                                    <value>ts</value>
+                                                </list>
+                                            </constructor-arg>
+                                            <constructor-arg value="SORTED"/>
+                                        </bean>
+                                    </list>
+                                </property>
+                            </bean>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+
+        <!-- Setting up affinity collocation with Spring XML configuration. -->
+        <property name="cacheKeyConfiguration">
+            <list>
+                <bean class="org.apache.ignite.cache.CacheKeyConfiguration">
+                    <property name="typeName" value="org.apache.ignite.iot.model.TempKey"/>
+                    <property name="affinityKeyFieldName" value="sensorId"/>
+                </bean>
+            </list>
+        </property>
+
+
+        <!-- Explicitly configure TCP discovery SPI to provide list of initial nodes. -->
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+                <property name="ipFinder">
+                    <!-- Uncomment static IP finder to enable static-based discovery of initial nodes. -->
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+                        <property name="addresses">
+                            <list>
+                                <!-- In distributed environment, replace with actual host IP address. -->
+                                <value>127.0.0.1:47500..47509</value>
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+</beans>
