@@ -1,0 +1,20 @@
+<component name="libraryTable">
+  <library name="commons-lang-2.6">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/commons-lang-2.6.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/ignite-rest-http-2.0.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/jetty-continuation-9.2.11.v20150529.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/jetty-http-9.2.11.v20150529.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/jetty-io-9.2.11.v20150529.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/jetty-server-9.2.11.v20150529.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/jetty-util-9.2.11.v20150529.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/jetty-xml-9.2.11.v20150529.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/log4j-1.2.17.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/slf4j-api-1.7.7.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/slf4j-log4j12-1.7.7.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/apache-ignite-fabric-2.0.0-bin/libs/optional/ignite-rest-http/tomcat-servlet-api-8.0.23.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

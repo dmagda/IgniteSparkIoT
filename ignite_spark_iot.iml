@@ -205,5 +205,6 @@
     <orderEntry type="library" name="Maven: com.twitter:chill_2.10:0.8.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.spark:spark-streaming_2.11:2.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.spark-project.spark:unused:1.0.0" level="project" />
+    <orderEntry type="library" name="commons-lang-2.6" level="project" />
   </component>
 </module>

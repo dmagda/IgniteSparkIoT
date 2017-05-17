@@ -130,6 +130,9 @@
                                 <!-- Assign an unique name for the value to access it from SQL easily. -->
                                 <property name="valueFieldName" value="temp"/>
 
+                                <!-- Changing the table name. -->
+                                <property name="tableName" value="Temperature"/>
+
                                 <!-- Defining indexed fields.-->
                                 <property name="indexes">
                                     <list>

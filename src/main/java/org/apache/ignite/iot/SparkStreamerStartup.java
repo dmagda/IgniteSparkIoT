@@ -172,7 +172,7 @@ public class SparkStreamerStartup {
             @Override public void run() {
                 System.out.println(" >>> Samples count:" + tempRdd.count());
 
-                Dataset ds = tempRdd.sql("SELECT sensorId, count(*) From Float WHERE temp > 70 and temp < 100" +
+                Dataset ds = tempRdd.sql("SELECT sensorId, count(*) From Temperature WHERE temp > 70 and temp < 100" +
                     " GROUP BY sensorId ORDER BY sensorID");
 
                 ds.show();
