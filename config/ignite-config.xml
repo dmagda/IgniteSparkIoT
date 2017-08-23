@@ -33,7 +33,35 @@
     <bean id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
         <!-- Set to true to enable distributed class loading for examples, default is false. -->
         <property name="peerClassLoadingEnabled" value="true"/>
-        
+
+        <!-- Configuring the off-heap memory usage. -->
+        <property name="memoryConfiguration">
+            <bean class="org.apache.ignite.configuration.MemoryConfiguration">
+                <property name="defaultMemoryPolicyName" value="DefaultRegion"/>
+
+                <property name="memoryPolicies">
+                    <list>
+                        <!--
+                            Defining a policy for 20 GB memory region with RANDOM_2_LRU eviction.
+                        -->
+                        <bean class="org.apache.ignite.configuration.MemoryPolicyConfiguration">
+                            <property name="name" value="DefaultRegion"/>
+                            <!-- Initial size is 100 MB. -->
+                            <property name="initialSize" value="#{100 * 1024 * 1024}"/>
+                            <!-- Maximum size is 400 MB. -->
+                            <property name="maxSize" value="#{400 * 1024 * 1024}"/>
+                            <!-- Enabling RANDOM_2_LRU eviction. -->
+                            <property name="pageEvictionMode" value="RANDOM_2_LRU"/>
+                            <!-- Enabling memory metrics -->
+                            <property name="metricsEnabled" value="true"/>
+                        </bean>
+                    </list>
+
+                </property>
+
+            </bean>
+        </property>
+
         <property name="cacheConfiguration">
             <list>
                 <!-- Sensors cache -->
@@ -91,24 +119,6 @@
                 <bean class="org.apache.ignite.configuration.CacheConfiguration">
                     <property name="name" value="TemperatureCache"/>
                     <property name="backups" value="1"/>
-
-                    <!-- Setting expiration policy -->
-                    <property name="expiryPolicyFactory">
-                        <bean class="javax.cache.configuration.FactoryBuilder" factory-method="factoryOf">
-                            <constructor-arg>
-                                <bean class="javax.cache.expiry.CreatedExpiryPolicy">
-                                    <constructor-arg>
-                                        <bean class="javax.cache.expiry.Duration">
-                                            <constructor-arg index="0" value="SECONDS"/>
-                                            <constructor-arg index="1" value="20"/>
-                                        </bean>
-                                    </constructor-arg>
-                                </bean>
-                            </constructor-arg>
-                        </bean>
-                    </property>
-
-                    <property name="eagerTtl" value="true"/>
 
                     <property name="queryEntities">
                         <list>
